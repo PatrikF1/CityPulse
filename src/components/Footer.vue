@@ -3,14 +3,14 @@
       <div class="container">
         <div class="footer-content">
           <div class="footer-column about-us">
-            <h3>About Us</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <h3 class="prvi">About Us</h3>
+            <p class="prvi">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
           </div>
           <div class="footer-column contact-us">
-            <h3>Contact Us</h3>
-            <p>Email: info@example.com</p>
-            <p>Phone: +123456789</p>
-            <p>Address: 123 Street, City, Country</p>
+            <h3 class="prvi">Contact Us</h3>
+            <p class="prvi">Email: info@example.com</p>
+            <p class="prvi">Phone: +123456789</p>
+            <p class="prvi">Address: 123 Street, City, Country</p>
           </div>
         </div>
       </div>
@@ -23,7 +23,12 @@
   }
   </script>
   
-  <style scoped>
+  <style>
+
+  .prvi{
+    color: #BBE1FA;
+  }
+
   .footer {
     background-color: #1B262C;
     color: #BBE1FA;
