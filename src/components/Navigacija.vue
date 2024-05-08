@@ -2,14 +2,15 @@
     <header>
       <nav class="container">
           <div class="brendiranje">
-              <router-link class="header" :to="{name: 'Home'}">CityPulse</router-link>
+              <router-link class="header" to="Home">CityPulse</router-link>
           </div>
           <div class="nav-links">
               <ul v-show="!mobitel">
-                  <router-link class="link" to="#">Home</router-link>
-                  <router-link class="link" to="#">Login/Registracija</router-link>
-                  <router-link class="link" to="#">nez</router-link>
-                  <router-link class="link" to="#">nez</router-link>
+                  <router-link class="link" to="Home">Home</router-link>
+                  <a class="link" href="#" @click="Alarm">Logout</a>
+                  <router-link class="link" to="#">Eventi</router-link>
+                  <router-link class="link" to="#">Profil</router-link>
+                  <router-link class="link" to="#">Klubovi</router-link>
               </ul>
           </div>
       </nav>
@@ -17,9 +18,10 @@
       <transition name="mobilna-nav">
           <ul class="mobilna-nav" v-show="mobilnaNav">
                   <router-link class="link" to="#">Home</router-link>
-                  <router-link class="link" to="#">Login/Registracija</router-link>
-                  <router-link class="link" to="#">nez</router-link>
-                  <router-link class="link" to="#">nez</router-link>
+                  <a class="link" href="#" @click="Alarm">Logout</a>
+                  <router-link class="link" to="#">Eventi</router-link>
+                  <router-link class="link" to="#">Profil</router-link>
+
           </ul>
       </transition>
     </header>
@@ -36,6 +38,7 @@
           return {
               mobitel: null,
               mobilnaNav: null,
+              alarm: false,
           };
       },
       created() {
@@ -54,7 +57,16 @@
           },
           otvoriMobilnuNav() {
               this.mobilnaNav = !this.mobilnaNav;
-          }
+          },
+
+          Alarm() {
+            if (confirm("Jesi li siguran da želiš odjaviti?")) {
+            this.$router.push("/Logout");
+            }
+          },
+
+        
+
       }
   };
   </script>
@@ -121,7 +133,10 @@
       right: 25px;
       height: 25px;
       width: auto;
+      background-color: #BBE1FA;
   }
+
+  
   
   .mobilna-nav {
       padding: 20px;
@@ -135,6 +150,7 @@
       top: 0;
       left: 0;
       list-style: none;
+      z-index: 100;
   
       .link {
           padding: 15px;
@@ -164,6 +180,8 @@
   .mobilna-nav-leave-to{
     transform: translateX(-250px);
   }
+
+
 
   </style>
   

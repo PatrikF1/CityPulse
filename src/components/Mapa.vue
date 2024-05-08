@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="mapContainer" style="width: 1920px; height: 685px;"></div>
+    <div id="mapContainer" ></div>
 
   
     <div v-if="prikaziFormu" class="modal">
@@ -149,10 +149,16 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+
 #mapContainer {
+  width: auto;
+  height: 685px;
   background-color: #1a1a1a;
   border: 1px solid #333;
+  flex: 1;
+  display: flex;
+  z-index: 1;
 }
 
 .modal {
@@ -178,4 +184,6 @@ export default {
 button {
   margin-right: 10px;
 }
+
+
 </style>

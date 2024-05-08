@@ -1,22 +1,14 @@
 <template>
   <div id="app">
-    <Navigacija/>
     <router-view/>
-    <Mapa />
-    <Footer />
   </div>
 </template>
 
 <script>
-import Navigacija from './components/Navigacija.vue';
-import Footer from './components/Footer.vue';
-import Mapa from './components/Mapa.vue';
+
 export default {
-  name: "app",
-  components: { Navigacija , Footer, Mapa}, 
-  data(){
-    return {};
-  }
+  name: "App",
+
 }
 
 </script>
