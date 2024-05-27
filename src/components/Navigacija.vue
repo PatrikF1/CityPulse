@@ -21,6 +21,7 @@
                   <a class="link" href="#" @click="Alarm">Logout</a>
                   <router-link class="link" to="#">Eventi</router-link>
                   <router-link class="link" to="#">Profil</router-link>
+                  <router-link class="link" to="#">Klubovi</router-link>
 
           </ul>
       </transition>
@@ -34,19 +35,19 @@
       components: {
           MenuIkona,
       },
-      data() {
+      data: function() {
           return {
               mobitel: null,
               mobilnaNav: null,
               alarm: false,
           };
       },
-      created() {
+      created: function() {
           window.addEventListener('resize', this.provjeriZaslon);
           this.provjeriZaslon();
       },
       methods: {
-          provjeriZaslon() {
+          provjeriZaslon: function() {
               const windowWidth = window.innerWidth;
               if (windowWidth <= 750) {
                   this.mobitel = true;
@@ -55,11 +56,11 @@
                   this.mobilnaNav = false;
               }
           },
-          otvoriMobilnuNav() {
+          otvoriMobilnuNav: function() {
               this.mobilnaNav = !this.mobilnaNav;
           },
 
-          Alarm() {
+          Alarm: function() {
             if (confirm("Jesi li siguran da želiš odjaviti?")) {
             this.$router.push("/Logout");
             }
@@ -113,14 +114,14 @@
           justify-content: flex-end;
   
           ul {
-              margin-right: 32px;
+              margin-right: 0px;
   
               .link {
-                  margin-right: 32px;
+                  margin-right: 25px;
               }
   
               .link:last-child {
-                  margin-right: 0;
+                  margin-right: 0px;
               }
           }
       }

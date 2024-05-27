@@ -1,13 +1,30 @@
 <template>
   <div id="app">
+    
     <router-view/>
+    <div v-if="pocetnaApp">
+      <h1 class="naslov">Dobrodosli u city pulse</h1>
+      <router-link to="Login">Login</router-link>
+      <router-link to="Registracija">Registracija</router-link>
+      
+    </div>
+    
+
   </div>
 </template>
 
 <script>
 
+
+
+
 export default {
   name: "App",
+  computed: {
+    pocetnaApp: function(){
+      return this.$route.path === '/';
+    }
+  }
 
 }
 
@@ -50,6 +67,11 @@ color: #BBE1FA;
 color: #fff;
 } 
 
+.naslov{
+  display: flex;
+  justify-content: center;
+  padding-top:100px ;
+}
 
 
 </style>

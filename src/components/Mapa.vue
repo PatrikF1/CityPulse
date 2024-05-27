@@ -55,13 +55,14 @@
 </template>
 
 <script>
+
 import L from 'leaflet';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import Geocoder from 'leaflet-control-geocoder';
 
 export default {
   name: 'GeolocationComponent',
-  data() {
+  data: function() {
     return {
       lat: 45.4333316,
       long: 13.5166646,
@@ -76,6 +77,7 @@ export default {
     };
   },
   mounted() {
+
     const graniceIstre = L.latLngBounds([45.12, 13.42], [45.68, 14.08]);
 
     this.mapa = L.map('mapContainer', {
@@ -95,33 +97,34 @@ export default {
       defaultMarkGeocode: false,
     });
 
-    geocodeControl.on('markgeocode', (s) => {
-      const sredina = s.geocode.center;
-      const marker = L.marker(sredina).addTo(this.mapa);
-      marker.bindPopup('Novi događaj').openPopup();
-      this.markeri.push(marker);
-      this.otvoriFormu(marker);
-    });
+    geocodeControl.on('markgeocode', function(s) {
+  const sredina = s.geocode.center;
+  const marker = L.marker(sredina).addTo(this.mapa);
+  marker.bindPopup('Novi događaj').openPopup();
+  this.markeri.push(marker);
+  this.otvoriFormu(marker);
+}.bind(this));
+
 
     geocodeControl.addTo(this.mapa);
   },
   methods: {
-    otvoriFormu(marker) {
+    otvoriFormu: function(marker) {
       this.prikaziFormu = true;
       this.odabraniMarker = marker;
-      /* tu ide za brisanje jer mi to otvara formu ali moram tek namjestit*/
+   
     },
-    zatvoriFormu() {
+    zatvoriFormu: function() {
       this.prikaziFormu = false;
       this.nazivDogadjaja = '';
       this.opisDogadjaja = '';
       this.odabraniMarker = null;
       this.slikaDogadjaja = null;
     },
-    odaberiSliku(event) {
+    odaberiSliku: function(event) {
       this.slikaDogadjaja = event.target.files[0];
     },
-    dodajDogadjaj() {
+    dodajDogadjaj: function() {
       if (this.odabraniMarker) {
         let sadrzaj = `<strong>${this.nazivDogadjaja}</strong><br><p>${this.opisDogadjaja}</p>`;
         if (this.slikaDogadjaja) {
@@ -152,8 +155,8 @@ export default {
 <style>
 
 #mapContainer {
-  width: auto;
-  height: 685px;
+  width: 100vw;
+  height: 73vh;
   background-color: #1a1a1a;
   border: 1px solid #333;
   flex: 1;

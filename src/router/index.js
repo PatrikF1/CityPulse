@@ -2,11 +2,15 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '@/views/Home.vue';
 import Logout from '@/views/Logout.vue';
-import Login from '@/views/Login.vue'
+import Login from '@/views/Login.vue';
+import Registracija from '@/views/Registracija.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
+
+ 
+
   {
     path: '/home', 
     name: 'Home',
@@ -23,6 +27,12 @@ const routes = [
     name: 'Login',
     component: Login,
   },
+  {
+    path: '/registracija',
+    name: 'Registracija',
+    component: Registracija,
+  }
+  
 ];
 
 const router = new VueRouter({

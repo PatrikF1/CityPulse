@@ -10,25 +10,26 @@
           <label for="password" class="form-label">Lozinka</label>
           <input type="password" class="form-control" id="password" v-model="password" required>
         </div>
-        <router-link class="btn btn-secondary active" to="Home" >Prijavi se</router-link>
+        <button type="submit" class="btn btn-secondary active" to="Home" >Prijavi se</button>
       </form>
+      
     </div>
   </template>
   
   <script>
   export default {
     name: 'Login',
-    data() {
+    data: function() {
       return {
         email: '',
         password: ''
       };
     },
     methods: {
-      login() {
-       
+      login: function() {
         console.log('Prijavljen korisnik:', this.email);
-        
+        alert("hvala na prijavi " + this.email)
+        this.$router.push('/home');
       }
     }
   };
