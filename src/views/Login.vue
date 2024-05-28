@@ -1,35 +1,47 @@
 <template>
     <div class="login">
       <h1 class="text-center mb-4">Login</h1>
-      <form @submit.prevent="login">
+      <form >
         <div class="mb-3">
           <label for="email" class="form-label">Email adresa</label>
-          <input type="email" class="form-control" id="email" v-model="email" required>
+          <input type="email" class="form-control" id="email" placeholder="Email" v-model="email" required>
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Lozinka</label>
-          <input type="password" class="form-control" id="password" v-model="password" required>
+          <input type="password" class="form-control" id="password" placeholder="Password" v-model="lozinka" required>
         </div>
-        <button type="submit" class="btn btn-secondary active" to="Home" >Prijavi se</button>
+        <button type="button" @click="login()" class="btn btn-secondary active" to="Home" >Prijavi se</button>
+        <b>Nemate profil? <router-link class="r" to="Registracija">Registracija</router-link></b>
       </form>
       
     </div>
   </template>
   
   <script>
+import { auth } from '@/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
   export default {
     name: 'Login',
     data: function() {
       return {
         email: '',
-        password: ''
+        lozinka: ''
       };
     },
     methods: {
       login: function() {
-        console.log('Prijavljen korisnik:', this.email);
-        alert("hvala na prijavi " + this.email)
-        this.$router.push('/home');
+        let self = this;
+        signInWithEmailAndPassword(auth, this.email, this.lozinka)
+                .then(function(userCredential) {
+                    const user = userCredential.user;
+                    alert("Hvala na prijavi " + self.email);
+                    self.$router.replace('Home');
+                })
+                .catch(function(error) {
+                    console.error('Greška pri registraciji:', error);
+                    alert("Greška pri registraciji: " + error.message);
+                });
       }
     }
   };
@@ -49,14 +61,14 @@
     font-weight: bold;
   }
   
-  .btn-primary {
+  .btn-secondary {
     background-color: #007bff;
     border-color: #007bff;
   }
   
-  .btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
-  }
+ .r {
+  text-decoration: none;
+ }
+  
   </style>
   

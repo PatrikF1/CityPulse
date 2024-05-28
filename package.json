@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "axios": "^1.6.8",
+    "bootstrap": "^5.3.3",
+    "bootstrap-vue": "^2.23.1",
     "core-js": "^3.8.3",
     "firebase": "^10.12.1",
     "git": "^0.1.5",

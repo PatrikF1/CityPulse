@@ -1,13 +1,19 @@
 <template>
   <div class="logout">
     <h1 class="centered">Hvala, book!</h1>
-    <router-link class="btn btn-secondary active" to="Login" >Login</router-link>
+    <button class="btn btn-secondary active" type="button" @click="logout">Login</button>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Logout',
+
+  methods: {
+    logout: function(){
+      this.$router.replace('Login')
+    }
+  }
 };
 
 
