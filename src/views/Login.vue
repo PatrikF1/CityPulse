@@ -36,6 +36,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
                 .then(function(userCredential) {
                     const user = userCredential.user;
                     alert("Hvala na prijavi " + self.email);
+                    console.log("Prijavljen korisnik: " + self.email)
                     self.$router.replace('Home');
                 })
                 .catch(function(error) {

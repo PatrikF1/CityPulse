@@ -1,50 +1,39 @@
 <template>
   <div>
-    <div id="mapContainer" ></div>
-
-  
+    <div id="mapContainer"></div>
     <div v-if="prikaziFormu" class="modal">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h3 class="modal-title">Dodaj događaj</h3>
-            <button type="button" class="btn-close" @click="zatvoriFormu"></button>
+            <button type="button" class="btn-close" @click="closeForm"></button>
           </div>
           <div class="modal-body">
-            <form @submit.prevent="dodajDogadjaj">
+            <form @submit.prevent="addEvent">
               <div class="mb-3">
                 <label for="nazivDogadjaja" class="form-label">Naziv događaja:</label>
-                <input
-                  type="text"
-                  v-model="nazivDogadjaja"
-                  class="form-control"
-                  id="nazivDogadjaja"
-                  required
-                />
+                <input type="text" v-model="nazivDogadjaja" class="form-control" id="nazivDogadjaja" required />
               </div>
               <div class="mb-3">
                 <label for="opisDogadjaja" class="form-label">Opis događaja:</label>
-                <textarea
-                  v-model="opisDogadjaja"
-                  class="form-control"
-                  id="opisDogadjaja"
-                  rows="3"
-                  required
-                ></textarea>
+                <textarea v-model="opisDogadjaja" class="form-control" id="opisDogadjaja" rows="3" required></textarea>
               </div>
               <div class="mb-3">
-                <label for="slikaDogadjaja" class="form-label">Slika događaja:</label>
-                <input
-                  type="file"
-                  class="form-control"
-                  id="slikaDogadjaja"
-                  @change="odaberiSliku"
-                  accept="image/*"
-                />
+                <label for="kategorijaDogadjaja" class="form-label">Kategorija događaja:</label>
+                <select v-model="kategorijaDogadjaja" class="form-control" id="kategorijaDogadjaja">
+                  <option>Kućna Zabava</option>
+                  <option>Koncerti</option>
+                  <option>Sport</option>
+                  <option>Festivali</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="slikaURL" class="form-label">URL slike događaja:</label>
+                <input type="text" v-model="slikaURL" class="form-control" id="slikaURL" placeholder="Unesite URL slike">
               </div>
               <div class="d-flex justify-content-between">
                 <button type="submit" class="btn btn-primary">Dodaj</button>
-                <button type="button" class="btn btn-secondary" @click="zatvoriFormu">Zatvori</button>
+                <button type="button" class="btn btn-secondary" @click="closeForm">Zatvori</button>
               </div>
             </form>
           </div>
@@ -55,14 +44,16 @@
 </template>
 
 <script>
-
+import store from '@/views/store';
 import L from 'leaflet';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
-import Geocoder from 'leaflet-control-geocoder';
+import { Geocoder } from 'leaflet-control-geocoder';
+import { db } from '@/firebase';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 
 export default {
   name: 'GeolocationComponent',
-  data: function() {
+  data() {
     return {
       lat: 45.4333316,
       long: 13.5166646,
@@ -72,88 +63,87 @@ export default {
       odabraniMarker: null,
       nazivDogadjaja: '',
       opisDogadjaja: '',
-      slikaDogadjaja: null,
-  
+      kategorijaDogadjaja: '',
+      slikaURL: '',  
     };
   },
   mounted() {
-
-    const graniceIstre = L.latLngBounds([45.12, 13.42], [45.68, 14.08]);
-
-    this.mapa = L.map('mapContainer', {
-      maxBounds: graniceIstre,
-      maxBoundsViscosity: 1.0,
-    }).setView([this.lat, this.long], 13);
-
-    L.tileLayer(
-      'https://api.maptiler.com/maps/basic-v2-dark/256/{z}/{x}/{y}.png?key=pWOwvlooKGifdZ9OWFI2',
-      {
-        maxZoom: 19,
-        attribution: '&copy; MapTiler & OpenStreetMap contributors',
-      }
-    ).addTo(this.mapa);
-
-    const geocodeControl = L.Control.geocoder({
-      defaultMarkGeocode: false,
-    });
-
-    geocodeControl.on('markgeocode', function(s) {
-  const sredina = s.geocode.center;
-  const marker = L.marker(sredina).addTo(this.mapa);
-  marker.bindPopup('Novi događaj').openPopup();
-  this.markeri.push(marker);
-  this.otvoriFormu(marker);
-}.bind(this));
-
-
-    geocodeControl.addTo(this.mapa);
+    this.initMap();
+    this.loadEvents();
   },
   methods: {
-    otvoriFormu: function(marker) {
-      this.prikaziFormu = true;
-      this.odabraniMarker = marker;
-   
+    initMap() {
+      const bounds = L.latLngBounds([45.12, 13.42], [45.68, 14.08]);
+      this.mapa = L.map('mapContainer', {
+        maxBounds: bounds,
+        maxBoundsViscosity: 1.0,
+      }).setView([this.lat, this.long], 13);
+
+      L.tileLayer('https://api.maptiler.com/maps/basic-v2-dark/256/{z}/{x}/{y}.png?key=pWOwvlooKGifdZ9OWFI2', {
+        maxZoom: 19,
+        attribution: '&copy; MapTiler & OpenStreetMap contributors',
+      }).addTo(this.mapa);
+
+      const geocoder = new L.Control.Geocoder({ defaultMarkGeocode: false });
+      geocoder.on('markgeocode', (e) => {
+        const center = e.geocode.center;
+        const marker = L.marker(center).addTo(this.mapa).bindPopup('Novi događaj').openPopup();
+        this.markeri.push(marker);
+        this.openForm(marker);
+      });
+      geocoder.addTo(this.mapa);
     },
-    zatvoriFormu: function() {
+    openForm(marker) {
+      this.odabraniMarker = marker;
+      this.prikaziFormu = true;
+    },
+    closeForm() {
       this.prikaziFormu = false;
+      this.resetFormData();
+    },
+    addEvent() {
+      if (!this.odabraniMarker || !this.slikaURL) return;
+      const { lat, lng } = this.odabraniMarker.getLatLng();
+      addDoc(collection(db, 'Events'), {
+        name: this.nazivDogadjaja,
+        description: this.opisDogadjaja,
+        category: this.kategorijaDogadjaja,
+        latitude: lat,
+        longitude: lng,
+        email: store.currentUser,
+        imageUrl: this.slikaURL
+      }).then((docRef) => {
+        console.log('Event dodan sa ID-e:', docRef.id);
+        const popupContent = `<strong style="font-size: 30px;">${this.nazivDogadjaja}</strong><br><strong><p>${this.opisDogadjaja}</p><img src="${this.slikaURL}" style="width: 300px;"><br><p>Objavio: ${this.email}</p>`;
+        this.odabraniMarker.bindPopup(popupContent).openPopup();
+        this.closeForm();
+        window.location.reload();
+      }).catch((error) => {
+        console.error('Error adding event:', error);
+      });
+    },
+    loadEvents() {
+      getDocs(collection(db, 'Events')).then((snapshot) => {
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          const marker = L.marker([data.latitude, data.longitude]).addTo(this.mapa);
+          marker.bindPopup(`<strong style="font-size: 30px;">${data.name}</strong><br><strong><p>${data.description}</p><img src="${data.imageUrl}" style="width: 300px;"><br><p>Objavio: ${data.email}</p>`);
+          this.markeri.push(marker);
+        });
+      });
+    },
+    resetFormData() {
       this.nazivDogadjaja = '';
       this.opisDogadjaja = '';
+      this.kategorijaDogadjaja = '';
+      this.slikaURL = null;
       this.odabraniMarker = null;
-      this.slikaDogadjaja = null;
     },
-    odaberiSliku: function(event) {
-      this.slikaDogadjaja = event.target.files[0];
-    },
-    dodajDogadjaj: function() {
-      if (this.odabraniMarker) {
-        let sadrzaj = `<strong>${this.nazivDogadjaja}</strong><br><p>${this.opisDogadjaja}</p>`;
-        if (this.slikaDogadjaja) {
-          const slikaUrl = URL.createObjectURL(this.slikaDogadjaja);
-          sadrzaj += `<br><img src="${slikaUrl}" alt="Slika događaja" width="150">`;
-        }
-
-
-        this.odabraniMarker.bindPopup(sadrzaj).openPopup();
-        this.odabraniMarker = null;
-        this.prikaziFormu = false;
-        this.nazivDogadjaja = '';
-        this.opisDogadjaja = '';
-        this.slikaDogadjaja = null;
-      }
-    },
-  },
-
-
-/* neznam kako dodati gumb za brisanje moram jos vidjeti*/ 
-
-
-
-
+  }
 };
 </script>
 
 <style>
-
 #mapContainer {
   width: 100vw;
   height: 73vh;
@@ -187,6 +177,4 @@ export default {
 button {
   margin-right: 10px;
 }
-
-
 </style>

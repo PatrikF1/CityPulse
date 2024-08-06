@@ -4,6 +4,7 @@ import Home from '@/views/Home.vue';
 import Logout from '@/views/Logout.vue';
 import Login from '@/views/Login.vue';
 import Registracija from '@/views/Registracija.vue';
+import Eventi from '@/views/Eventi.vue';
 
 Vue.use(VueRouter);
 
@@ -31,7 +32,12 @@ const routes = [
     path: '/registracija',
     name: 'Registracija',
     component: Registracija,
-  }
+  },
+  {
+    path: '/eventi',
+    name: 'Eventi',
+    component: Eventi,
+  },
   
 ];
 

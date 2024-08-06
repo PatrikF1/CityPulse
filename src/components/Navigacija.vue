@@ -8,7 +8,7 @@
           <ul v-show="!mobitel">
             <router-link class="link" to="Home">Home</router-link>
             <a class="link" href="#" @click="logoutL()">Logout</a>
-            <router-link class="link" to="#">Eventi</router-link>
+            <router-link class="link" to="Eventi">Eventi</router-link>
             <router-link class="link" to="#">Profil</router-link>
             <router-link class="link" to="#">Klubovi</router-link>
           </ul>
@@ -19,7 +19,7 @@
         <ul class="mobilna-nav" v-show="mobilnaNav">
           <router-link class="link" to="Home">Home</router-link>
           <a class="link" href="#" @click="logoutL()">Logout</a>
-          <router-link class="link" to="#">Eventi</router-link>
+          <router-link class="link" to="Eventi">Eventi</router-link>
           <router-link class="link" to="#">Profil</router-link>
           <router-link class="link" to="#">Klubovi</router-link>
         </ul>
