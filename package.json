@@ -7,6 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "bootstrap-vue": "^2.23.1",
@@ -15,6 +16,7 @@
     "git": "^0.1.5",
     "leaflet": "^1.9.4",
     "leaflet-control-geocoder": "^2.4.0",
+    "v-calendar": "^2.4.2",
     "vue": "^2.6.14",
     "vue-router": "^3.5.1"
   },

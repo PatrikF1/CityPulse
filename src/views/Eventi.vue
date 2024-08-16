@@ -2,36 +2,65 @@
   <div id="event">
     <div class="background"></div>
     <Navigacija/>
+    <div class="container">
+      <div class="calendar">
+        <v-calendar @dayclick="selectedDate" :attributes="atributiKalendara"></v-calendar>
+      </div>
+    </div>
     <h1 class="pretrazite">Pretražite Evente!</h1>
     <div class="element">
       <div class="kategorije" @click="toggleDropdown">
         Kategorije
-        <div class="dropdown" v-if="showDropdown">
-          <div class="dropdown-item">Kućna Zabava</div>
-          <div class="dropdown-item">Koncerti</div>
-          <div class="dropdown-item">Sport</div>
-          <div class="dropdown-item">Festivali</div>
+        <div class="dropdown" v-if="prikaziKategorije">
+          <div class="dropdown-item" @click="filterCategory('Kućna Zabava')">Kućna Zabava</div>
+          <div class="dropdown-item" @click="filterCategory('Koncerti')">Koncerti</div>
+          <div class="dropdown-item" @click="filterCategory('Sport')">Sport</div>
+          <div class="dropdown-item" @click="filterCategory('Festivali')">Festivali</div>
+          <div class="dropdown-item" @click="showAllEvents">Prikazi sve</div>
         </div>
       </div>
       <div class="dodaj">Dodaj Event</div>
+      <button @click="showAllEvents" class="prikazi-sve-gumb">Prikazi Sve Evente</button>
     </div>
+    <eventKartice ref="eventKarticeComponent" />
   </div>
+  
 </template>
 
 <script>
 import Navigacija from '@/components/Navigacija.vue';
+import EventKartice from '@/components/EventKartice.vue';
+import { Calendar as VCalendar } from 'v-calendar';
 
 export default {
   name: 'Eventi',
-  components: { Navigacija },
+  components: { Navigacija, VCalendar, EventKartice },
   data() {
     return {
-      showDropdown: false
+      prikaziKategorije: false,
+      odabraniDan: new Date(),
+      atributiKalendara: [
+        { 
+          key: 'today', 
+          dates: new Date(), 
+        },
+      ]
     };
   },
   methods: {
     toggleDropdown() {
-      this.showDropdown = !this.showDropdown;
+      this.prikaziKategorije = !this.prikaziKategorije;
+    },
+    selectedDate(day) {
+      this.odabraniDan = day.date;
+      this.$refs.eventKarticeComponent.filterEvents(this.odabraniDan, this.odabranaKategorija);
+    },
+    filterCategory(category) {
+      this.odabranaKategorija = category;
+      this.$refs.eventKarticeComponent.filterEvents(this.odabraniDan, this.odabranaKategorija);
+    },
+    showAllEvents() {
+      this.$refs.eventKarticeComponent.prikaziSveEvente();
     }
   }
 };
@@ -92,7 +121,7 @@ export default {
 
 .dropdown {
   position: absolute;
-  top: 60px; /* Pomaknite dropdown ispod kategorija */
+  top: 60px; 
   left: 0;
   width: 100%;
   background-color: #1B262C;
@@ -102,18 +131,6 @@ export default {
   animation: slideDown 0.3s ease;
   overflow: hidden;
   z-index: 1;
- 
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .dropdown-item {
@@ -143,4 +160,37 @@ export default {
   border-radius: 25px; 
   z-index: 1;
 }
+
+
+
+.calendar { 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  background-color: #76ABAE; 
+  margin-top: 345px;
+  margin-left: 20px;
+ 
+}
+
+.prikazi-sve-gumb {
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  position: absolute;
+  width: 230px; 
+  height: 50px; 
+  top: 10px; 
+  left: 53%; 
+  transform: translateX(-50%); 
+  background-color: #76ABAE;
+  color: #000000; 
+  font-size: 23px; 
+  font-weight: 600;
+  border-radius: 25px; 
+  z-index: 1;
+}
+
+
+
 </style>

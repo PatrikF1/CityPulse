@@ -28,6 +28,10 @@
                 </select>
               </div>
               <div class="mb-3">
+                <label for="datumDogadjaja" class="form-label">Datum događaja:</label>
+                <input type="date" v-model="datumDogadjaja" class="form-control" id="datumDogadjaja" required />
+              </div>
+              <div class="mb-3">
                 <label for="slikaURL" class="form-label">URL slike događaja:</label>
                 <input type="text" v-model="slikaURL" class="form-control" id="slikaURL" placeholder="Unesite URL slike">
               </div>
@@ -64,7 +68,8 @@ export default {
       nazivDogadjaja: '',
       opisDogadjaja: '',
       kategorijaDogadjaja: '',
-      slikaURL: '',  
+      slikaURL: '',
+      datumDogadjaja: '',  
     };
   },
   mounted() {
@@ -102,16 +107,23 @@ export default {
       this.resetFormData();
     },
     addEvent() {
-      if (!this.odabraniMarker || !this.slikaURL) return;
+      if (!this.odabraniMarker || !this.slikaURL || !this.datumDogadjaja) return;
       const { lat, lng } = this.odabraniMarker.getLatLng();
+      const eventDate = new Date(this.datumDogadjaja);
+      if (isNaN(eventDate.getTime())) {
+        alert("Invalid date. Please enter a valid date.");
+        return;
+      }
       addDoc(collection(db, 'Events'), {
         name: this.nazivDogadjaja,
         description: this.opisDogadjaja,
         category: this.kategorijaDogadjaja,
         latitude: lat,
         longitude: lng,
+        date: eventDate.toISOString(),
         email: store.currentUser,
         imageUrl: this.slikaURL
+        
       }).then((docRef) => {
         console.log('Event dodan sa ID-e:', docRef.id);
         const popupContent = `<strong style="font-size: 30px;">${this.nazivDogadjaja}</strong><br><strong><p>${this.opisDogadjaja}</p><img src="${this.slikaURL}" style="width: 300px;"><br><p>Objavio: ${this.email}</p>`;
@@ -137,6 +149,7 @@ export default {
       this.opisDogadjaja = '';
       this.kategorijaDogadjaja = '';
       this.slikaURL = null;
+      this.datumDogadjaja = '';
       this.odabraniMarker = null;
     },
   }
