@@ -23,7 +23,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 
   export default {
     name: 'Login',
-    data: function() {
+    data() {
       return {
         email: '',
         lozinka: ''

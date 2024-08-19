@@ -60,7 +60,7 @@ export default {
       this.$refs.eventKarticeComponent.filterEvents(this.odabraniDan, this.odabranaKategorija);
     },
     showAllEvents() {
-      this.$refs.eventKarticeComponent.prikaziSveEvente();
+      this.$refs.eventKarticeComponent.showAllEvents();
     }
   }
 };
@@ -94,6 +94,7 @@ export default {
   right: 100px;
   border-radius: 150px;
   transition: box-shadow 0.3s ease;
+  z-index: -1;
 }
 
 .element:hover {
@@ -115,7 +116,7 @@ export default {
   font-size: 30px; 
   font-weight: 600;
   border-radius: 25px; 
-  z-index: 1;
+  z-index: -1;
   cursor: pointer;
 }
 

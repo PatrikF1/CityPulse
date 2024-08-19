@@ -2,20 +2,28 @@
     
   <div class="event-cards">
       <div v-for="event in filtriraniDogadaji" :key="event.id" class="event-card">
-        <img :src="event.imageUrl" alt="Event image" class="event-image">
+        <img :src="event.imageUrl" alt="Event image" class="event-image" @click="openEventDetails(event)">
       </div>
+
+      <EventDetalji v-if="selektiraniEvent" :event="selektiraniEvent" @close="selektiraniEvent = null"/>
     </div>
+    
 </template>
 
 <script>
 import { db } from '@/firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import EventDetalji from '@/components/EventDetalji.vue'
+
 
 export default {
+name: 'EventKartice',
+components: { EventDetalji },
 data() {
-    return{
+    return {
         dogadaji: [],
         filtriraniDogadaji: [],
+        selektiraniEvent: null,
     };
 },
 mounted() {
@@ -60,8 +68,13 @@ methods: {
         return pogodeniDatum && pogodenaKategorija;
       });
     },
-    prikaziSveEvente() {
+    showAllEvents() {
       this.filtriraniDogadaji = this.dogadaji;
+    },
+
+    openEventDetails(event) {
+      this.selektiraniEvent = event;
+      console.log(this.selektiraniEvent);
     }
   }
 };
@@ -91,5 +104,12 @@ methods: {
   height: 200px;
   object-fit: cover;
   border-radius: 30px;
+  transition: transform 0.3s ease,box-shadow 0.3s ease;
 }
+
+.event-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 10px 13px rgba(0, 0, 0, 0.5); 
+}
+
 </style>
