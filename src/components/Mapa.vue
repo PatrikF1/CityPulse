@@ -122,7 +122,8 @@ export default {
         longitude: lng,
         date: eventDate.toISOString(),
         email: store.currentUser,
-        imageUrl: this.slikaURL
+        imageUrl: this.slikaURL,
+        
         
       }).then((docRef) => {
         console.log('Event dodan sa ID-e:', docRef.id);

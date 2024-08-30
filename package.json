@@ -16,6 +16,7 @@
     "git": "^0.1.5",
     "leaflet": "^1.9.4",
     "leaflet-control-geocoder": "^2.4.0",
+    "moment": "^2.30.1",
     "v-calendar": "^2.4.2",
     "vue": "^2.6.14",
     "vue-router": "^3.5.1"

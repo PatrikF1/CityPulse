@@ -5,7 +5,7 @@
         <img :src="event.imageUrl" alt="Event image" class="event-image" @click="openEventDetails(event)">
       </div>
 
-      <EventDetalji v-if="selektiraniEvent" :event="selektiraniEvent" @close="selektiraniEvent = null"/>
+      <EventDetalji v-if="selektiraniEvent" :event="selektiraniEvent"  @close="selektiraniEvent = null"/>
     </div>
     
 </template>
@@ -50,7 +50,7 @@ methods: {
           date: dogadaj.date,
           category: dogadaj.category,
           imageUrl: dogadaj.imageUrl,
-          email: dogadaj.email, 
+          organizatorEmail: dogadaj.email, 
          };
       });
 
@@ -67,6 +67,7 @@ methods: {
         const pogodenaKategorija = !kategorija || event.category === kategorija;
         return pogodeniDatum && pogodenaKategorija;
       });
+      return this.filtriraniDogadaji.length;
     },
     showAllEvents() {
       this.filtriraniDogadaji = this.dogadaji;
@@ -89,13 +90,15 @@ methods: {
   margin-left: 20%;
   margin-top: 250px;
   gap: 40px;
+  z-index: -1;
 }
 
 .event-card {
-  position: fixed;
+  position: relative;
   width: 300px;
   margin: 10px;
   overflow: hidden;
+
 }
 
 .event-image {
@@ -105,6 +108,7 @@ methods: {
   object-fit: cover;
   border-radius: 30px;
   transition: transform 0.3s ease,box-shadow 0.3s ease;
+  
 }
 
 .event-image:hover {

@@ -33,23 +33,23 @@
   import { signOut } from 'firebase/auth';
   
   export default {
-    name:'navigacija',
+    name:'Navigacija',
     components: {
       MenuIkona,
     },
-    data: function() {
+    data() {
       return {
         mobitel: null,
         mobilnaNav: null,
         alarm: false,
       };
     },
-    created: function() {
+    created() {
       window.addEventListener('resize', this.provjeriZaslon);
       this.provjeriZaslon();
     },
     methods: {
-      provjeriZaslon: function() {
+      provjeriZaslon() {
         const windowWidth = window.innerWidth;
         if (windowWidth <= 750) {
           this.mobitel = true;
@@ -58,10 +58,10 @@
           this.mobilnaNav = false;
         }
       },
-      otvoriMobilnuNav: function() {
+      otvoriMobilnuNav() {
         this.mobilnaNav = !this.mobilnaNav;
       },
-      logoutL: function(){
+      logoutL(){
         signOut(auth)
           .then(() => {
             this.$router.push('Logout');

@@ -8,21 +8,22 @@
       </div>
     </div>
     <h1 class="pretrazite">Pretražite Evente!</h1>
-    <div class="element">
-      <div class="kategorije" @click="toggleDropdown">
-        Kategorije
-        <div class="dropdown" v-if="prikaziKategorije">
+    <div class="dropdown" v-if="prikaziKategorije">
           <div class="dropdown-item" @click="filterCategory('Kućna Zabava')">Kućna Zabava</div>
           <div class="dropdown-item" @click="filterCategory('Koncerti')">Koncerti</div>
           <div class="dropdown-item" @click="filterCategory('Sport')">Sport</div>
           <div class="dropdown-item" @click="filterCategory('Festivali')">Festivali</div>
-          <div class="dropdown-item" @click="showAllEvents">Prikazi sve</div>
         </div>
+    <div class="element">
+      <div class="kategorije" @click="toggleDropdown">
+        Kategorije
+        
       </div>
       <div class="dodaj">Dodaj Event</div>
-      <button @click="showAllEvents" class="prikazi-sve-gumb">Prikazi Sve Evente</button>
+      <button @click="showAllEvents" class="prikaziSve">Prikazi Sve Evente</button>
     </div>
     <eventKartice ref="eventKarticeComponent" />
+    <div v-if="Greska" class="greska">Nema odabranog događaja u kategoriji: {{ odabranaKategorija }}</div>
   </div>
   
 </template>
@@ -32,6 +33,7 @@ import Navigacija from '@/components/Navigacija.vue';
 import EventKartice from '@/components/EventKartice.vue';
 import { Calendar as VCalendar } from 'v-calendar';
 
+
 export default {
   name: 'Eventi',
   components: { Navigacija, VCalendar, EventKartice },
@@ -39,6 +41,7 @@ export default {
     return {
       prikaziKategorije: false,
       odabraniDan: new Date(),
+      Greska: false,
       atributiKalendara: [
         { 
           key: 'today', 
@@ -52,16 +55,26 @@ export default {
       this.prikaziKategorije = !this.prikaziKategorije;
     },
     selectedDate(day) {
-      this.odabraniDan = day.date;
+      this.odabraniDan = new Date(day.date.getTime() + (24 * 60 * 60 * 1000));
       this.$refs.eventKarticeComponent.filterEvents(this.odabraniDan, this.odabranaKategorija);
     },
     filterCategory(category) {
       this.odabranaKategorija = category;
-      this.$refs.eventKarticeComponent.filterEvents(this.odabraniDan, this.odabranaKategorija);
+      this.prikaziKategorije = false;
+      this.$refs.eventKarticeComponent.filterEvents(null, this.odabranaKategorija);
+
+      if (this.$refs.eventKarticeComponent.filtriraniDogadaji.length === 0) {
+        this.Greska = true;
+      } else {
+        this.Greska = false;
+      }
     },
     showAllEvents() {
       this.$refs.eventKarticeComponent.showAllEvents();
-    }
+      this.Greska = false;
+      window.location.reload();
+    },
+    
   }
 };
 </script>
@@ -83,6 +96,7 @@ export default {
   position: absolute;
   top: 170px;
   left: 150px;
+  z-index: -1;
 }
 
 .element {
@@ -116,8 +130,8 @@ export default {
   font-size: 30px; 
   font-weight: 600;
   border-radius: 25px; 
-  z-index: -1;
   cursor: pointer;
+ 
 }
 
 .dropdown {
@@ -131,17 +145,19 @@ export default {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   animation: slideDown 0.3s ease;
   overflow: hidden;
-  z-index: 1;
+  
 }
 
 .dropdown-item {
   padding: 10px 15px;
   color: #BBE1FA;
   cursor: pointer;
+  z-index: 1;
 }
 
 .dropdown-item:hover {
   background-color: #76ABAE;
+
 }
 
 .dodaj {
@@ -174,7 +190,7 @@ export default {
  
 }
 
-.prikazi-sve-gumb {
+.prikaziSve {
   display: flex;
   align-items: center; 
   justify-content: center; 
@@ -186,12 +202,22 @@ export default {
   transform: translateX(-50%); 
   background-color: #76ABAE;
   color: #000000; 
-  font-size: 23px; 
-  font-weight: 600;
+  font-size: 20px; 
+  font-weight: 700;
   border-radius: 25px; 
   z-index: 1;
 }
 
-
+.greska {
+  position: fixed;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-left: 35%;
+  margin-top: 250px;
+  font-weight: 700;
+  font-size: 30px;
+  z-index: -1;
+}
 
 </style>
