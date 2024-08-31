@@ -1,78 +1,43 @@
 <template>
-    <header>
-      <nav class="container">
-        <div class="brendiranje">
-          <router-link class="header" to="Home">CityPulse</router-link>
-        </div>
-        <div class="nav-links">
-          <ul v-show="!mobitel">
-            <router-link class="link" to="Home">Home</router-link>
-            <a class="link" href="#" @click="logoutL()">Logout</a>
-            <router-link class="link" to="Eventi">Eventi</router-link>
-            <router-link class="link" to="#">Profil</router-link>
-            <router-link class="link" to="#">Klubovi</router-link>
-          </ul>
-        </div>
-      </nav>
-      <MenuIkona @click="otvoriMobilnuNav" class="menu-ikona" v-show="mobitel"/>
-      <transition name="mobilna-nav">
-        <ul class="mobilna-nav" v-show="mobilnaNav">
+  <header>
+    <nav class="container">
+      <div class="brendiranje">
+        <router-link class="header" to="Home">CityPulse</router-link>
+      </div>
+      <div class="nav-links">
+        <ul>
           <router-link class="link" to="Home">Home</router-link>
           <a class="link" href="#" @click="logoutL()">Logout</a>
           <router-link class="link" to="Eventi">Eventi</router-link>
-          <router-link class="link" to="#">Profil</router-link>
+          <router-link class="link" to="Profil">Profil</router-link>
           <router-link class="link" to="#">Klubovi</router-link>
         </ul>
-      </transition>
-    </header>
-  </template>
+      </div>
+    </nav>
+  </header>
+</template>
+
   
-  <script>
-  import MenuIkona from '../assets/ikone/menu-bars-svgrepo-com.svg'
-  import { auth } from '@/firebase';
-  import { signOut } from 'firebase/auth';
-  
-  export default {
-    name:'Navigacija',
-    components: {
-      MenuIkona,
-    },
-    data() {
-      return {
-        mobitel: null,
-        mobilnaNav: null,
-        alarm: false,
-      };
-    },
-    created() {
-      window.addEventListener('resize', this.provjeriZaslon);
-      this.provjeriZaslon();
-    },
-    methods: {
-      provjeriZaslon() {
-        const windowWidth = window.innerWidth;
-        if (windowWidth <= 750) {
-          this.mobitel = true;
-        } else {
-          this.mobitel = false;
-          this.mobilnaNav = false;
-        }
-      },
-      otvoriMobilnuNav() {
-        this.mobilnaNav = !this.mobilnaNav;
-      },
-      logoutL(){
-        signOut(auth)
-          .then(() => {
-            this.$router.push('Logout');
-          })
-          .catch(error => {
-            console.error("Greška pri odjavi:", error);
-          });
-      }
+<script>
+import { auth } from '@/firebase';
+import { signOut } from 'firebase/auth';
+
+export default {
+  name:'Navigacija',
+  methods: {
+    logoutL(){
+      signOut(auth)
+        .then(() => {
+          this.$router.push('Logout');
+        })
+        .catch(error => {
+          console.error("Greška pri odjavi:", error);
+        });
     }
-  };
-  </script>
+  }
+};
+</script>
+
   
   <style lang="scss" scoped>
   header {

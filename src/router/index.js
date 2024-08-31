@@ -5,6 +5,7 @@ import Logout from '@/views/Logout.vue';
 import Login from '@/views/Login.vue';
 import Registracija from '@/views/Registracija.vue';
 import Eventi from '@/views/Eventi.vue';
+import Profil from '@/views/Profil.vue';
 
 Vue.use(VueRouter);
 
@@ -38,7 +39,11 @@ const routes = [
     name: 'Eventi',
     component: Eventi,
   },
-  
+  {
+    path: '/profil',
+    name: 'Profil',
+    component: Profil,
+  },
 ];
 
 const router = new VueRouter({

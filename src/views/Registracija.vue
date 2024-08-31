@@ -32,6 +32,10 @@
                     </button>
                 </div>
             </div>
+            <div class="mb-3">
+                <label for="profilnaSlika" class="form-label">Profilna Slika</label>
+                <input type="file" class="form-control" id="profilnaSlika" @change="handleFileChange" accept="image/*">
+            </div>
             <div class="d-flex justify-content-between align-items-center">
                 <button class="btn btn-primary" type="button" @click="registracija()">Registriraj se</button>
                 <b>Imate vec profil? <router-link class="l" to="/login">Login</router-link></b>
@@ -41,8 +45,10 @@
 </template>
 
 <script>
-import { auth } from '@/firebase';
+import { auth, db, storage } from '@/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 export default {
     name: 'Registracija',
@@ -53,7 +59,8 @@ export default {
             datumRodenja: '',
             lozinka: '',
             lozinka1: '',
-            showPassword: false
+            showPassword: false,
+            profileImage: null,
         };
     },
     methods: {
@@ -68,7 +75,16 @@ export default {
             }
             return false;
         },
-        registracija() {
+
+         handleFileChange(event) {
+        const file = event.target.files[0];
+        if (file) {
+            this.profileImage = file;
+        }
+    },
+
+        async registracija() {
+            
             if (!this.provjeriStarost(this.datumRodenja)) {
                 alert("Premlad korisnik, minimalne godine su 16!");
                 return;
@@ -78,18 +94,32 @@ export default {
                 return;
             }
 
-            let self = this;
-            createUserWithEmailAndPassword(auth, this.email, this.lozinka)
-                .then(function(userCredential) {
-                    const user = userCredential.user;
-                    console.log('Prijavljen korisnik:', user.email);
-                    alert("Hvala na prijavi " + self.korisnickoIme);
-                    self.$router.replace('Login');
-                })
-                .catch(function(error) {
-                    console.error('Greška pri registraciji:', error);
-                    alert("Greška pri registraciji: " + error.message);
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, this.email, this.lozinka);
+                const user = userCredential.user;
+
+                let photoURL = '';
+                if(this.profileImage) {
+                    const storageRef = ref(storage, `profile_images/${user.uid}`);
+                    const snapshot = await uploadBytes(storageRef, this.profileImage);
+                    photoURL = await getDownloadURL(snapshot.ref)
+                }
+
+                await setDoc(doc(db, 'users', user.uid), {
+                    korisnickoIme: this.korisnickoIme,
+                    datumRodenja: this.datumRodenja,
+                    email: this.email,
+                    photoURL: photoURL,  
                 });
+
+                console.log('Prijavljen korisnik:', user.email);
+                alert("Hvala na prijavi " + this.korisnickoIme);
+                this.$router.replace('Login');
+            } catch (error) {
+                console.error('Greška pri registraciji:', error);
+                alert("Greška pri registraciji: " + error.message);
+            }
+            
         },
         toggleShowPassword() {
             this.showPassword = !this.showPassword;

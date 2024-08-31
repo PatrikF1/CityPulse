@@ -9,6 +9,7 @@
     <p class="event-description">{{ event.description }}</p>
     <p class="event-date">Datum: {{ formattedDate }}</p>
 
+    
     <div class="reservation-section">
       <h3 class="reservation-title">Rezervacije</h3>
 

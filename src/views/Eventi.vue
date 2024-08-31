@@ -19,7 +19,7 @@
         Kategorije
         
       </div>
-      <div class="dodaj">Dodaj Event</div>
+      
       <button @click="showAllEvents" class="prikaziSve">Prikazi Sve Evente</button>
     </div>
     <eventKartice ref="eventKarticeComponent" />
@@ -158,24 +158,6 @@ export default {
 .dropdown-item:hover {
   background-color: #76ABAE;
 
-}
-
-.dodaj {
-  display: flex;
-  align-items: center; 
-  justify-content: center; 
-  position: absolute;
-  width: 230px; 
-  height: 50px; 
-  top: 10px; 
-  left: 87%; 
-  transform: translateX(-50%); 
-  background-color: #76ABAE;
-  color: #000000; 
-  font-size: 30px; 
-  font-weight: 600;
-  border-radius: 25px; 
-  z-index: 1;
 }
 
 

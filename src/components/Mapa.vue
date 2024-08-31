@@ -1,6 +1,7 @@
 <template>
   <div>
     <div id="mapContainer"></div>
+    <div id="searchInstruction">Pretražite u tražilici lokaciju na koju želite dodati event</div>
     <div v-if="prikaziFormu" class="modal">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -166,6 +167,19 @@ export default {
   flex: 1;
   display: flex;
   z-index: 1;
+  position: relative;
+}
+
+#searchInstruction {
+  position: absolute;
+  bottom: 170px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 20px;
+  z-index: 1000;
 }
 
 .modal {
