@@ -10,6 +10,24 @@
     <p class="event-date">Datum: {{ formattedDate }}</p>
 
     
+    <div class="like-section">
+      <button v-if="!likedByUser && !loading" @click="likeEvent" class="like-button">
+        👍🏻
+      </button>
+      <button v-if="likedByUser && !loading" @click="unlikeEvent" class="like-button">
+        👎🏻
+      </button>
+      <p>Lajkali su:</p>
+      <ul>
+        <li v-for="user in likedUsers" :key="user.uid">
+      <router-link :to="{ name: 'Profil', query: { uid: user.uid } }">
+        {{ user.korisnickoIme }}
+      </router-link>
+    </li>
+      </ul>
+    </div>
+
+    
     <div class="reservation-section">
       <h3 class="reservation-title">Rezervacije</h3>
 
@@ -78,6 +96,9 @@ export default {
       },
       selectedTables: [],
       loading: true,
+      loadingLikes: false,
+      likedByUser: false,
+      likedUsers: [],
     };
   },
   computed: {
@@ -89,6 +110,14 @@ export default {
     this.checkIfOrganizator();
     this.loadTables();
   },
+
+  async created() {
+    this.loading = true;
+    await this.checkIfLikedByUser();
+    await this.loadLikedUsers();
+    this.loading = false;
+  },
+
   methods: {
     checkIfOrganizator() {
       const user = auth.currentUser;
@@ -159,7 +188,7 @@ export default {
 
         this.event.tables.splice(index, 1);
         console.log('Stol je obrisan: ', table)
-        window.location.reload();
+        window.location.reload();          
       } catch (error) {
         console.error('Greška pri brisanju stola: ', error);
       }
@@ -203,8 +232,8 @@ export default {
       
       this.event.tables = updatedTables;
       alert( "Rezervacija uspješno izvršena");
-
       window.location.reload();
+      
     } else {
       console.log("Event ne postoji");
     }
@@ -213,6 +242,92 @@ export default {
   }
 },
 
+async checkIfLikedByUser() {
+      const user = auth.currentUser;
+      if (user) {
+        const eventRef = doc(db, 'Events', this.event.id);
+        const eventSnap = await getDoc(eventRef);
+        if (eventSnap.exists()) {
+          const eventData = eventSnap.data();
+
+          if (Array.isArray(eventData.likes)) {
+            this.likedByUser = eventData.likes.includes(user.uid);
+          } else {
+            this.likedByUser = false;
+          }
+        }
+      }
+    },
+
+    async loadLikedUsers() {
+  this.loadingLikes = true;
+  try {
+    const eventRef = doc(db, 'Events', this.event.id);
+    const eventSnap = await getDoc(eventRef);
+    if (eventSnap.exists()) {
+      const eventData = eventSnap.data();
+      if (eventData.likes) {
+        const userPromises = eventData.likes.map(uid => getDoc(doc(db, 'users', uid)));
+        const userDocs = await Promise.all(userPromises);
+
+        
+        const uniqueUsers = new Set();
+        userDocs.forEach(doc => {
+          if (doc.exists()) {
+            const userData = doc.data();
+            uniqueUsers.add(userData); 
+          }
+        });
+
+        this.likedUsers = Array.from(uniqueUsers);
+        console.log(this.likedUsers);
+      }
+    }
+  } catch (error) {
+    console.error("Greška pri učitavanju lajkova: ", error);
+  } finally {
+    this.loadingLikes = false;
+  }
+},
+
+
+    async likeEvent() {
+    this.loadingLikes = true;
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        const eventRef = doc(db, 'Events', this.event.id);
+        await updateDoc(eventRef, {
+          likes: arrayUnion(user.uid)
+        });
+        await this.loadLikedUsers();
+        this.likedByUser = true;
+      } catch (error) {
+        console.error("Greška pri lajkanju: ", error);
+      } finally {
+        this.loadingLikes = false;
+      }
+    }
+  },
+
+  async unlikeEvent() {
+    this.loadingLikes = true;
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        const eventRef = doc(db, 'Events', this.event.id);
+        await updateDoc(eventRef, {
+          likes: arrayRemove(user.uid)
+        });
+        await this.loadLikedUsers();
+        this.likedByUser = false;
+      } catch (error) {
+        console.error("Greška pri uklanjanju lajka: ", error);
+      } finally {
+        this.loadingLikes = false;
+      }
+    }
+  },
 
     
   }
@@ -357,6 +472,67 @@ export default {
 .delete-button:hover {
   background-color: #A72D2D; 
 }
+
+
+.like-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #233545;
+  border-radius: 10px;
+  color: #76ABAE;
+}
+
+
+.like-button {
+  background-color: #76ABAE;
+  color: #1B262C;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.like-button:hover {
+  background-color: #A1C4D9;
+}
+
+
+.like-section p {
+  margin: 10px 0;
+  font-weight: 700;
+  text-align: center;
+}
+
+
+.like-section ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.like-section li {
+  background-color: #1B262C;
+  color: #76ABAE;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  display: block;
+  border: 1px solid red;
+}
+
+
+.like-section li:before {
+  content: '•';
+  color: #76ABAE;
+  font-size: 20px;
+  margin-right: 10px;
+}
+
 
   </style>
   

@@ -1,38 +1,37 @@
 <template>
-    <div id="profil">
-        <Navigacija/>
-        <div class="profil-container">
-            <h3>Profil korisnika</h3>
-            <div v-if="user">
-                <div class="user-info">
-                    <div @click="triggerFileInput" class="profile-picture-container">
-                        <img v-if="user.photoURL" :src="user.photoURL" alt="Profile Picture" class="profile-picture"/>
-                        <div class="overlay-text">Kliknite za promjenu</div>
-                        <input type="file" ref="fileInput" @change="onFileSelected" accept="image/*" style="display: none;">
-                    </div>
-                    <button v-if="newProfileImage" @click="uploadProfilePicture" class="btn-save-bio">Potvrdi</button> 
-                    <div class="user-details">
-                        <p style="text-align: center; font-size: 30px;">{{ user.korisnickoIme }}</p>
-                        <p style="text-align: center;">{{ user.email }}</p>
-
-                        <div v-if="user.bio">
-                            <p style="text-align: center;"><strong>Bio:</strong> <br>{{ user.bio }}</p>
-                            <button @click="deleteBio" class="btn-delete-bio">Izbriši Bio</button>
-                        </div>
-
-                        <div v-else>
-                            <textarea v-model="bio" placeholder="Napišite nešto o sebi..." class="bio-textarea"></textarea>
-                            <button v-if="bio" @click="saveBio" class="btn-save-bio">Potvrdi</button>
-                        </div>
-                    </div>
-                </div>
+  <div id="profil">
+    <Navigacija/>
+    <div class="profil-container">
+      <h3>Profil korisnika</h3>
+      <div v-if="loading" class="loading-indicator">Učitavanje...</div>
+      <div v-if="!loading && user">
+        <div class="user-info">
+          <div @click="triggerFileInput" class="profile-picture-container">
+            <img v-if="user.photoURL" :src="user.photoURL" alt="Profile Picture" class="profile-picture"/>
+            <div class="overlay-text">Kliknite za promjenu</div>
+            <input type="file" ref="fileInput" @change="onFileSelected" accept="image/*" style="display: none;">
+          </div>
+          <button v-if="newProfileImage" @click="uploadProfilePicture" class="btn-save-bio">Potvrdi</button>
+          <div class="user-details">
+            <p style="text-align: center; font-size: 30px;">{{ user.korisnickoIme }}</p>
+            <p style="text-align: center;">{{ user.email }}</p>
+            <div v-if="user.bio">
+              <p style="text-align: center;"><strong>Bio:</strong> <br>{{ user.bio }}</p>
+              <button @click="deleteBio" class="btn-delete-bio">Izbriši Bio</button>
             </div>
             <div v-else>
-                <p>Nema Podataka!</p>
+              <textarea v-model="bio" placeholder="Napišite nešto o sebi..." class="bio-textarea"></textarea>
+              <button v-if="bio" @click="saveBio" class="btn-save-bio">Potvrdi</button>
             </div>
+          </div>
         </div>
-        <Footer/>
+      </div>
+      <div v-else>
+        <p>Nema Podataka!</p>
+      </div>
     </div>
+    <Footer/>
+  </div>
 </template>
 
 <script>
@@ -46,14 +45,17 @@ import { storage } from "@/firebase";
 export default {
     name: 'Profil',
     components: { Footer, Navigacija },
+    
     data() {
         return {
             user: null,
             bio: '',
             newProfileImage: null,
+            loading: true
         };
     },
     async created() {
+        this.loading = true;
         const currentUser = auth.currentUser;
         if (currentUser) {
             try {
@@ -63,7 +65,12 @@ export default {
                 }
             } catch (error) {
                 console.error('Greška pri dohvaćanju korisničkih podataka:', error);
+            } finally {
+                this.loading = false;
             }
+        }
+        else {
+            this.loading = false
         }
     },
     methods: {
@@ -116,6 +123,13 @@ export default {
 </script>
 
 <style>
+
+.loading-indicator {
+  color: #76ABAE;
+  font-weight: 700;
+  font-size: 18px;
+  margin: 20px 0;
+}
 
 .upload-btn {
     margin-top: 15px;
