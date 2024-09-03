@@ -17,12 +17,10 @@
       <button v-if="likedByUser && !loading" @click="unlikeEvent" class="like-button">
         👎🏻
       </button>
-      <p>Lajkali su:</p>
+      <p style="color: aquamarine;">Osobe koje dolaze:</p>
       <ul>
         <li v-for="user in likedUsers" :key="user.uid">
-      <router-link :to="{ name: 'Profil', query: { uid: user.uid } }">
         {{ user.korisnickoIme }}
-      </router-link>
     </li>
       </ul>
     </div>
@@ -522,7 +520,7 @@ async checkIfLikedByUser() {
   display: flex;
   align-items: center;
   display: block;
-  border: 1px solid red;
+  border: 1px solid aquamarine;
 }
 
 

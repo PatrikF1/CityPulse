@@ -10,7 +10,7 @@
           <a class="link" href="#" @click="logoutL()">Logout</a>
           <router-link class="link" to="Eventi">Eventi</router-link>
           <router-link class="link" to="Profil">Profil</router-link>
-          <router-link class="link" to="#">Klubovi</router-link>
+          <router-link class="link" to="Klubovi">Klubovi</router-link>
         </ul>
       </div>
     </nav>

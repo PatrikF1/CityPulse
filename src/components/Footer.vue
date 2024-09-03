@@ -3,14 +3,15 @@
       <div class="container">
         <div class="footer-content">
           <div class="footer-column about-us">
-            <h3 class="prvi">About Us</h3>
-            <p class="prvi">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <h3 class="prvi">O CityPulse-u 🌆</h3>
+            <p class="prvi">Za sve ljubitelje zabave i dobrog izlaska sa ekipom!
+              Uvijek pratite gdje i kada se dešavaju eventi 🎉</p>
           </div>
           <div class="footer-column contact-us">
-            <h3 class="prvi">Contact Us</h3>
-            <p class="prvi">Email: info@example.com</p>
-            <p class="prvi">Phone: +123456789</p>
-            <p class="prvi">Address: 123 Street, City, Country</p>
+            <h3 class="prvi">Kontaktiraj nas </h3>
+            <p class="prvi">Email: citypulse@gmail.com</p>
+            <p class="prvi">Phone: +385 91 292 3962</p>
+            <p class="prvi">U slučaju greške zovite na broj ili pošaljite mail!</p>
           </div>
         </div>
       </div>
