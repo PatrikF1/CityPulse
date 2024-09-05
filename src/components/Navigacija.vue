@@ -11,6 +11,10 @@
           <router-link class="link" to="Eventi">Eventi</router-link>
           <router-link class="link" to="Profil">Profil</router-link>
           <router-link class="link" to="Klubovi">Klubovi</router-link>
+          <div v-if="isAdmin">
+          <router-link class="link" to="/admin">Admin Kontrola</router-link>
+          </div>
+          
         </ul>
       </div>
     </nav>
@@ -24,6 +28,15 @@ import { signOut } from 'firebase/auth';
 
 export default {
   name:'Navigacija',
+  data() {
+    return {
+      isAdmin: false,
+    }
+  },
+  created() {
+    this.checkAdminStatus();
+  },
+
   methods: {
     logoutL(){
       signOut(auth)
@@ -33,7 +46,14 @@ export default {
         .catch(error => {
           console.error("Greška pri odjavi:", error);
         });
-    }
+    },
+
+    checkAdminStatus() {
+      const user = auth.currentUser; 
+      if (user && user.email === 'admin@gmail.com') { 
+        this.isAdmin = true; 
+      }
+    },
   }
 };
 </script>

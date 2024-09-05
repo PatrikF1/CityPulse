@@ -128,44 +128,82 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
+
+body {
+    background-image: url('https://static.vecteezy.com/system/resources/previews/007/194/064/original/futuristic-night-city-background-free-vector.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
 .registracija {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+  max-width: 400px;
+  margin: 100px auto; 
+  padding: 40px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 .mb-4 {
-    margin-bottom: 1.5rem;
+  margin-bottom: 24px;
 }
 
 .mb-3 {
-    margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
 .form-label {
-    font-weight: bold;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.form-control {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.btn-secondary, .btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  padding: 10px;
+  width: 100%;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-secondary:hover, .btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.r, .l {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.r:hover, .l:hover {
+  text-decoration: underline;
 }
 
 .input-group .btn {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-}
-
-.l {
-    text-decoration: none;
-}
 
 
 </style>

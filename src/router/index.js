@@ -7,6 +7,7 @@ import Registracija from '@/views/Registracija.vue';
 import Eventi from '@/views/Eventi.vue';
 import Profil from '@/views/Profil.vue';
 import Klubovi from '@/views/Klubovi.vue';
+import AdminPage from '@/views/AdminPage.vue';
 
 Vue.use(VueRouter);
 
@@ -49,7 +50,12 @@ const routes = [
     path: '/klubovi',
     name: 'Klubovi',
     component: Klubovi,
-  }
+  },
+  {
+    path: '/admin',
+    name: 'AdminPage',
+    component: AdminPage, 
+  },
 ];
 
 const router = new VueRouter({
