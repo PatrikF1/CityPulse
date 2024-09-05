@@ -130,15 +130,7 @@ export default {
 
 <style >
 
-body {
-    background-image: url('https://static.vecteezy.com/system/resources/previews/007/194/064/original/futuristic-night-city-background-free-vector.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
+
 
 .registracija {
   max-width: 400px;
